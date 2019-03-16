@@ -1,10 +1,10 @@
 // init project
-let express = require('express');
-let app = express();
+const express = require('express');
+const app = express();
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
-let cors = require('cors');
+const  cors = require('cors');
 app.use(cors({optionSuccessStatus: 200}));  // some legacy browsers choke on 204
 
 // http://expressjs.com/en/starter/static-files.html
@@ -17,11 +17,13 @@ app.get("/", function (req, res) {
 
 // the api returns request info
 app.get("/api/whoami", (req, res) => {
-  res.json({"ipaddress": req.ip, "language": req.get('Accept-Language'), "software": req.get('User-Agent')});
+  let ip = req.get('x-forwarded-for');
+  ip = ip.substring(0,ip.indexOf(','));
+  res.json({"ipaddress": ip, "language": req.get('Accept-Language'), "software": req.get('User-Agent')});
 });
 
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
+const listener = app.listen(process.env.PORT, () => {
   console.log('Your app is listening on port ' + listener.address().port);
 });
